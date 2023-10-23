@@ -57,7 +57,7 @@ func TestCreateNewUserToken(t *testing.T) {
 
 		// Assuming you have a MongoDB client and a database connection, use the client and connection to insert the userdata
 		// Replace "yourDatabaseName" with your actual database name
-		client, err := mongo.NewClient(options.Client().ApplyURI("MONGOCONNSTRINGENV"))
+		client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/"))
 		if err != nil {
 			t.Errorf("Failed to create MongoDB client: %v", err)
 		} else {
@@ -85,14 +85,14 @@ func TestCreateNewUserToken(t *testing.T) {
 
 func TestDeleteUser(t *testing.T) {
 
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
+	mconn := SetConnection("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/", "befous")
 	var userdata User
 	userdata.Username = "befous"
 	DeleteUser(mconn, "user", userdata)
 }
 
 func TestGFCPostHandlerUser(t *testing.T) {
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
+	mconn := SetConnection("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/", "befous")
 	var userdata User
 	userdata.Username = "befous"
 	userdata.Password = "befous"
@@ -101,7 +101,7 @@ func TestGFCPostHandlerUser(t *testing.T) {
 }
 
 func TestFunciionUser(t *testing.T) {
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
+	mconn := SetConnection("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/", "befous")
 	var userdata User
 	userdata.Username = "befous"
 	userdata.Password = "befous"
@@ -179,10 +179,10 @@ func TestGeneratePrivateKeyPaseto(t *testing.T) {
 }
 
 func TestHashFunction(t *testing.T) {
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
+	mconn := SetConnection("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/", "befous")
 	var userdata User
 	userdata.Username = "befous"
-	userdata.Password = "befous"
+	userdata.Password = "ganteng"
 
 	filter := bson.M{"username": userdata.Username}
 	res := atdb.GetOneDoc[User](mconn, "user", filter)

@@ -2,7 +2,6 @@ package peda
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -110,24 +109,23 @@ func GCFCreateHandlerTokenPaseto(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname
 }
 
 func GCFCreateHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	var resp Credential
+	resp.Status = false
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	var datauser User
 	err := json.NewDecoder(r.Body).Decode(&datauser)
 	if err != nil {
-		return err.Error()
+		resp.Message = "error parsing application/json: " + err.Error()
+	} else {
+		resp.Status = true
+		hash, hashErr := HashPassword(datauser.Password)
+		if hashErr != nil {
+			resp.Message = "Gagal Hash Password" + err.Error()
+		}
+		InsertUserdata(mconn, datauser.Username, datauser.Role, hash)
+		resp.Message = "Berhasil Input data"
 	}
-
-	// Hash the password before storing it
-	hashedPassword, hashErr := HashPassword(datauser.Password)
-	if hashErr != nil {
-		return hashErr.Error()
-	}
-	datauser.Password = hashedPassword
-
-	createErr := CreateNewUserRole(mconn, collectionname, datauser)
-	fmt.Println(createErr)
-
-	return GCFReturnStruct(datauser)
+	return GCFReturnStruct(resp)
 }
 func GFCPostHandlerUser(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	var Response Credential

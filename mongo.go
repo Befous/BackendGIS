@@ -1,6 +1,8 @@
 package peda
 
 import (
+	"context"
+	"fmt"
 	"os"
 
 	"github.com/aiteung/atdb"
@@ -101,10 +103,18 @@ func CreateNewProduct(mongoconn *mongo.Database, collection string, productdata 
 	return atdb.InsertOneDoc(mongoconn, collection, productdata)
 }
 
+func InsertOneDoc(db *mongo.Database, collection string, doc interface{}) (insertedID interface{}) {
+	insertResult, err := db.Collection(collection).InsertOne(context.TODO(), doc)
+	if err != nil {
+		fmt.Printf("InsertOneDoc: %v\n", err)
+	}
+	return insertResult.InsertedID
+}
+
 func InsertUserdata(MongoConn *mongo.Database, username, role, password string) (InsertedID interface{}) {
 	req := new(User)
 	req.Username = username
 	req.Password = password
 	req.Role = role
-	return atdb.InsertOneDoc(MongoConn, "user", req)
+	return InsertOneDoc(MongoConn, "user", req)
 }

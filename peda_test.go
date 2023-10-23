@@ -162,7 +162,7 @@ func TestFindUser(t *testing.T) {
 }
 
 func TestGeneratePasswordHash(t *testing.T) {
-	password := "ganteng"
+	password := "12345"
 	hash, _ := HashPassword(password) // ignore error for the sake of simplicity
 
 	fmt.Println("Password:", password)

@@ -108,7 +108,7 @@ func GCFCreateHandlerTokenPaseto(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname
 	return GCFReturnStruct(datauser)
 }
 
-func GCFCreateHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func GCFCreateHandler(MONGOCONNSTRINGENV, dbname string, r *http.Request) string {
 	var resp Credential
 	resp.Status = false
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)

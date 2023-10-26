@@ -32,6 +32,17 @@ func GetAllBangunanLineString(mongoenv *mongo.Database, collname string) []GeoJs
 	return lokasi
 }
 
+func MemasukkanKoordinat(MongoConn *mongo.Database, colname string, coordinate []float64, name, volume, tipe string) (InsertedID interface{}) {
+	req := new(Coordinate)
+	req.Type = tipe
+	req.Coordinates = coordinate
+	req.Name = name
+	req.Volume = volume
+
+	ins := atdb.InsertOneDoc(MongoConn, colname, req)
+	return ins
+}
+
 func GetNameAndPassowrd(mongoenv *mongo.Database, collname string) []User {
 	user := atdb.GetAllDoc[[]User](mongoenv, collname)
 	return user

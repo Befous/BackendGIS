@@ -65,3 +65,15 @@ type ResponseDataUser struct {
 type Response struct {
 	Token string `json:"token,omitempty" bson:"token,omitempty"`
 }
+
+type Pesan struct {
+	Status  bool   `json:"status" bson:"status"`
+	Message string `json:"message" bson:"message"`
+}
+
+type Coordinate struct {
+	Type        string    `json:"type" bson:"type"`
+	Name        string    `json:"name" bson:"name"`
+	Volume      string    `json:"volume" bson:"volume"`
+	Coordinates []float64 `json:"coordinates" bson:"coordinates"`
+}

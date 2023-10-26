@@ -2,6 +2,7 @@ package peda
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -17,6 +18,26 @@ func AmbilDataGeojson(mongoenv, dbname, collname string) string {
 	mconn := SetConnection(mongoenv, dbname)
 	datagedung := GetAllBangunanLineString(mconn, collname)
 	return ReturnStruct(datagedung)
+}
+
+func MembuatKoordinat(mongoenv, dbname, collname string, r *http.Request) string {
+	response := new(Credential)
+	conn := SetConnection(mongoenv, dbname)
+	koordinat := new(Coordinate)
+	err := json.NewDecoder(r.Body).Decode(&koordinat)
+	if err != nil {
+		response.Status = false
+		response.Message = "error parsing application/json: " + err.Error()
+	} else {
+		response.Status = true
+		insert := MemasukkanKoordinat(conn, collname,
+			koordinat.Coordinates,
+			koordinat.Name,
+			koordinat.Volume,
+			koordinat.Type)
+		response.Message = fmt.Sprintf("%v:%v", "Berhasil Input data", insert)
+	}
+	return ReturnStruct(response)
 }
 
 func MembuatUser(mongoenv, dbname, collname string, r *http.Request) string {

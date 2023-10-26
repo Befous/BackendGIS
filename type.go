@@ -56,18 +56,12 @@ type Credential struct {
 	Message string `json:"message,omitempty" bson:"message,omitempty"`
 }
 
-type Product struct {
-	Nomorid     int    `json:"nomorid" bson:"nomorid"`
-	Name        string `json:"name" bson:"name"`
-	Description string `json:"description" bson:"description"`
-	Price       int    `json:"price" bson:"price"`
-	Stock       int    `json:"stock" bson:"stock"`
-	Size        string `json:"size" bson:"size"`
-	Image       string `json:"image" bson:"image"`
+type ResponseDataUser struct {
+	Status  bool   `json:"status" bson:"status"`
+	Message string `json:"message,omitempty" bson:"message,omitempty"`
+	Data    []User `json:"data,omitempty" bson:"data,omitempty"`
 }
 
 type Response struct {
-	Status  bool        `json:"status" bson:"status"`
-	Message string      `json:"message" bson:"message"`
-	Data    interface{} `json:"data" bson:"data"`
+	Token string `json:"token,omitempty" bson:"token,omitempty"`
 }

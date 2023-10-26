@@ -1,8 +1,6 @@
 package peda
 
 import (
-	"context"
-	"fmt"
 	"os"
 
 	"github.com/aiteung/atdb"
@@ -19,14 +17,19 @@ func SetConnection(MONGOCONNSTRINGENV, dbname string) *mongo.Database {
 	return atdb.MongoConnect(DBmongoinfo)
 }
 
+func CompareUsername(MongoConn *mongo.Database, Colname, username string) bool {
+	filter := bson.M{"username": username}
+	err := atdb.GetOneDoc[User](MongoConn, Colname, filter)
+	users := err.Username
+	if users == "" {
+		return false
+	}
+	return true
+}
+
 func GetAllBangunanLineString(mongoconn *mongo.Database, collection string) []GeoJson {
 	lokasi := atdb.GetAllDoc[[]GeoJson](mongoconn, collection)
 	return lokasi
-}
-
-func GetAllProduct(mongoconn *mongo.Database, collection string) []Product {
-	product := atdb.GetAllDoc[[]Product](mongoconn, collection)
-	return product
 }
 
 func GetNameAndPassowrd(mongoconn *mongo.Database, collection string) []User {
@@ -97,24 +100,10 @@ func IsPasswordValid(mongoconn *mongo.Database, collection string, userdata User
 	return hashChecker
 }
 
-// product
-
-func CreateNewProduct(mongoconn *mongo.Database, collection string, productdata Product) interface{} {
-	return atdb.InsertOneDoc(mongoconn, collection, productdata)
-}
-
-func InsertOneDoc(db *mongo.Database, collection string, doc interface{}) (insertedID interface{}) {
-	insertResult, err := db.Collection(collection).InsertOne(context.TODO(), doc)
-	if err != nil {
-		fmt.Printf("InsertOneDoc: %v\n", err)
-	}
-	return insertResult.InsertedID
-}
-
-func InsertUserdata(MongoConn *mongo.Database, username, role, password string) (InsertedID interface{}) {
+func InsertUserdata(MongoConn *mongo.Database, collection, username, role, password string) (InsertedID interface{}) {
 	req := new(User)
 	req.Username = username
 	req.Password = password
 	req.Role = role
-	return InsertOneDoc(MongoConn, "user", req)
+	return atdb.InsertOneDoc(MongoConn, collection, req)
 }

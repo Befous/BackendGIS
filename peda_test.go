@@ -14,7 +14,7 @@ import (
 )
 
 func TestUpdateGetData(t *testing.T) {
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
+	mconn := SetConnection("mongoenv", "befous")
 	datagedung := GetAllUser(mconn, "user")
 	fmt.Println(datagedung)
 }
@@ -57,7 +57,7 @@ func TestCreateNewUserToken(t *testing.T) {
 
 		// Assuming you have a MongoDB client and a database connection, use the client and connection to insert the userdata
 		// Replace "yourDatabaseName" with your actual database name
-		client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/"))
+		client, err := mongo.NewClient(options.Client().ApplyURI("mongoenv"))
 		if err != nil {
 			t.Errorf("Failed to create MongoDB client: %v", err)
 		} else {
@@ -85,14 +85,14 @@ func TestCreateNewUserToken(t *testing.T) {
 
 func TestDeleteUser(t *testing.T) {
 
-	mconn := SetConnection("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/", "befous")
+	mconn := SetConnection("mongoenv", "befous")
 	var userdata User
 	userdata.Username = "befous"
 	DeleteUser(mconn, "user", userdata)
 }
 
 func TestGFCPostHandlerUser(t *testing.T) {
-	mconn := SetConnection("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/", "befous")
+	mconn := SetConnection("mongoenv", "befous")
 	var userdata User
 	userdata.Username = "befous"
 	userdata.Password = "befous"
@@ -101,31 +101,12 @@ func TestGFCPostHandlerUser(t *testing.T) {
 }
 
 func TestFunciionUser(t *testing.T) {
-	mconn := SetConnection("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/", "befous")
+	mconn := SetConnection("mongoenv", "befous")
 	var userdata User
 	userdata.Username = "befous"
 	userdata.Password = "befous"
 	userdata.Role = "admin"
 	CreateNewUserRole(mconn, "user", userdata)
-}
-
-func TestProduct(t *testing.T) {
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
-	var productdata Product
-	productdata.Nomorid = 1
-	productdata.Name = "befous"
-	productdata.Description = "befous"
-	productdata.Price = 1000
-	productdata.Size = "XL"
-	productdata.Stock = 100
-	productdata.Image = "https://images3.alphacoders.com/165/thumb-1920-165265.jpg"
-	CreateNewProduct(mconn, "product", productdata)
-}
-
-func TestAllProduct(t *testing.T) {
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
-	product := GetAllProduct(mconn, "product")
-	fmt.Println(product)
 }
 
 func TestGeneratePasswordHashh(t *testing.T) {
@@ -139,7 +120,7 @@ func TestGeneratePasswordHashh(t *testing.T) {
 	fmt.Println("Match:   ", match)
 }
 func TestHashFunctionn(t *testing.T) {
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
+	mconn := SetConnection("mongoenv", "befous")
 	var userdata User
 	userdata.Username = "befous"
 	userdata.Password = "befous"
@@ -156,13 +137,13 @@ func TestHashFunctionn(t *testing.T) {
 func TestFindUser(t *testing.T) {
 	var userdata User
 	userdata.Username = "befous"
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
+	mconn := SetConnection("mongoenv", "befous")
 	res := FindUser(mconn, "user", userdata)
 	fmt.Println(res)
 }
 
 func TestGeneratePasswordHash(t *testing.T) {
-	password := "12345"
+	password := "befous"
 	hash, _ := HashPassword(password) // ignore error for the sake of simplicity
 
 	fmt.Println("Password:", password)
@@ -179,10 +160,10 @@ func TestGeneratePrivateKeyPaseto(t *testing.T) {
 }
 
 func TestHashFunction(t *testing.T) {
-	mconn := SetConnection("mongodb+srv://befous:yUft6BXdcZJ647e8@cluster0.sstnspm.mongodb.net/", "befous")
+	mconn := SetConnection("mongoenv", "befous")
 	var userdata User
 	userdata.Username = "befous"
-	userdata.Password = "ganteng"
+	userdata.Password = "befous"
 
 	filter := bson.M{"username": userdata.Username}
 	res := atdb.GetOneDoc[User](mconn, "user", filter)
@@ -195,7 +176,7 @@ func TestHashFunction(t *testing.T) {
 }
 
 func TestIsPasswordValid(t *testing.T) {
-	mconn := SetConnection("MONGOCONNSTRINGENV", "befous")
+	mconn := SetConnection("mongoenv", "befous")
 	var userdata User
 	userdata.Username = "befous"
 	userdata.Password = "befous"

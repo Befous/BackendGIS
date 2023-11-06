@@ -2,7 +2,6 @@ package peda
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -20,24 +19,15 @@ func AmbilDataGeojson(mongoenv, dbname, collname string) string {
 	return ReturnStruct(datagedung)
 }
 
-func MembuatKoordinat(mongoenv, dbname, collname string, r *http.Request) string {
-	response := new(Credential)
-	conn := SetConnection(mongoenv, dbname)
-	koordinat := new(Coordinate)
-	err := json.NewDecoder(r.Body).Decode(&koordinat)
+func MembuatDataGeojson(mongoenv, dbname, collname string, r *http.Request) string {
+	mconn := SetConnection(mongoenv, dbname)
+	var geojsonline GeoJsonLineString
+	err := json.NewDecoder(r.Body).Decode(&geojsonline)
 	if err != nil {
-		response.Status = false
-		response.Message = "error parsing application/json: " + err.Error()
-	} else {
-		response.Status = true
-		insert := MemasukkanKoordinat(conn, collname,
-			koordinat.Coordinates,
-			koordinat.Name,
-			koordinat.Volume,
-			koordinat.Type)
-		response.Message = fmt.Sprintf("%v:%v", "Berhasil Input data", insert)
+		return err.Error()
 	}
-	return ReturnStruct(response)
+	PostLinestring(mconn, collname, geojsonline)
+	return ReturnStruct(geojsonline)
 }
 
 func MembuatUser(mongoenv, dbname, collname string, r *http.Request) string {
@@ -169,9 +159,9 @@ func MembuatUserDenganRole(mongoenv, dbname, collname string, r *http.Request) s
 		if hashErr != nil {
 			response.Message = "Gagal Hash Password" + err.Error()
 		}
-		hash, hashErrRole := HashRole(datauser.Role)
+		hash, hashErrRole := HashPassword(datauser.Role)
 		if hashErrRole != nil {
-			response.Message = "Gagal Hash Password" + err.Error()
+			response.Message = "Gagal Hash Role" + err.Error()
 		}
 		InsertUserdata(mconn, collname, datauser.Username, datauser.Role, hash)
 		response.Message = "Berhasil Input data"

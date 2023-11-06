@@ -15,6 +15,12 @@ type GeometryPoint struct {
 	Type        string    `json:"type" bson:"type"`
 }
 
+type GeoJsonPoint struct {
+	Type       string        `json:"type" bson:"type"`
+	Properties Properties    `json:"properties" bson:"properties"`
+	Geometry   GeometryPoint `json:"geometry" bson:"geometry"`
+}
+
 type GeoJsonLineString struct {
 	Type       string             `json:"type" bson:"type"`
 	Properties Properties         `json:"properties" bson:"properties"`

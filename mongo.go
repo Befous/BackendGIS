@@ -32,8 +32,16 @@ func GetAllBangunanLineString(mongoenv *mongo.Database, collname string) []GeoJs
 	return lokasi
 }
 
+func PostPoint(mongoconn *mongo.Database, collection string, pointdata GeoJsonPoint) interface{} {
+	return atdb.InsertOneDoc(mongoconn, collection, pointdata)
+}
+
 func PostLinestring(mongoconn *mongo.Database, collection string, linestringdata GeoJsonLineString) interface{} {
 	return atdb.InsertOneDoc(mongoconn, collection, linestringdata)
+}
+
+func PostPolygon(mongoconn *mongo.Database, collection string, polygondata GeoJsonPolygon) interface{} {
+	return atdb.InsertOneDoc(mongoconn, collection, polygondata)
 }
 
 func MemasukkanKoordinat(MongoConn *mongo.Database, colname string, coordinate []float64, name, volume, tipe string) (InsertedID interface{}) {

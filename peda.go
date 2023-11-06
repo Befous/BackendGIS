@@ -19,7 +19,18 @@ func AmbilDataGeojson(mongoenv, dbname, collname string) string {
 	return ReturnStruct(datagedung)
 }
 
-func MembuatDataGeojson(mongoenv, dbname, collname string, r *http.Request) string {
+func MembuatGeojsonPoint(mongoenv, dbname, collname string, r *http.Request) string {
+	mconn := SetConnection(mongoenv, dbname)
+	var geojsonpoint GeoJsonPoint
+	err := json.NewDecoder(r.Body).Decode(&geojsonpoint)
+	if err != nil {
+		return err.Error()
+	}
+	PostPoint(mconn, collname, geojsonpoint)
+	return ReturnStruct(geojsonpoint)
+}
+
+func MembuatGeojsonPolyline(mongoenv, dbname, collname string, r *http.Request) string {
 	mconn := SetConnection(mongoenv, dbname)
 	var geojsonline GeoJsonLineString
 	err := json.NewDecoder(r.Body).Decode(&geojsonline)
@@ -28,6 +39,17 @@ func MembuatDataGeojson(mongoenv, dbname, collname string, r *http.Request) stri
 	}
 	PostLinestring(mconn, collname, geojsonline)
 	return ReturnStruct(geojsonline)
+}
+
+func MembuatGeojsonPolygon(mongoenv, dbname, collname string, r *http.Request) string {
+	mconn := SetConnection(mongoenv, dbname)
+	var geojsonpolygon GeoJsonPolygon
+	err := json.NewDecoder(r.Body).Decode(&geojsonpolygon)
+	if err != nil {
+		return err.Error()
+	}
+	PostPolygon(mconn, collname, geojsonpolygon)
+	return ReturnStruct(geojsonpolygon)
 }
 
 func MembuatUser(mongoenv, dbname, collname string, r *http.Request) string {
@@ -159,11 +181,11 @@ func MembuatUserDenganRole(mongoenv, dbname, collname string, r *http.Request) s
 		if hashErr != nil {
 			response.Message = "Gagal Hash Password" + err.Error()
 		}
-		hash, hashErrRole := HashPassword(datauser.Role)
+		hashRole, hashErrRole := HashRole(datauser.Role)
 		if hashErrRole != nil {
 			response.Message = "Gagal Hash Role" + err.Error()
 		}
-		InsertUserdata(mconn, collname, datauser.Username, datauser.Role, hash)
+		InsertUserdata(mconn, collname, datauser.Username, hashRole, hash)
 		response.Message = "Berhasil Input data"
 	}
 	return ReturnStruct(response)

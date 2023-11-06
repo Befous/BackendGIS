@@ -66,11 +66,7 @@ func MembuatUser(mongoenv, dbname, collname string, r *http.Request) string {
 		if hashErr != nil {
 			response.Message = "Gagal Hash Password" + err.Error()
 		}
-		hashRole, hashErrRole := HashRole(datauser.Role)
-		if hashErrRole != nil {
-			response.Message = "Gagal Hash Role" + err.Error()
-		}
-		InsertUserdata(mconn, collname, datauser.Username, hashRole, hash)
+		InsertUserdata(mconn, collname, datauser.Username, datauser.Role, hash)
 		response.Message = "Berhasil Input data"
 	}
 	return ReturnStruct(response)
@@ -91,12 +87,8 @@ func MembuatTokenUser(privatekey, mongoenv, dbname, collname string, r *http.Req
 			if err != nil {
 				response.Message = "Gagal Encode Token : " + err.Error()
 			} else {
-				if IsRoleValid(mconn, collname, datauser) {
-					response.Message = "Selamat Datang"
-					response.Token = tokenstring
-				} else {
-					response.Message = "Akun anda tidak memiliki role"
-				}
+				response.Message = "Selamat Datang"
+				response.Token = tokenstring
 			}
 		} else {
 			response.Message = "Password Salah"

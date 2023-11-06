@@ -70,7 +70,7 @@ func MembuatUser(mongoenv, dbname, collname string, r *http.Request) string {
 		if hashErrRole != nil {
 			response.Message = "Gagal Hash Role" + err.Error()
 		}
-		InsertUserdata(mconn, collname, datauser.Username, hash, hashRole)
+		InsertUserdata(mconn, collname, datauser.Username, hashRole, hash)
 		response.Message = "Berhasil Input data"
 	}
 	return ReturnStruct(response)

@@ -52,12 +52,16 @@ func MembuatGeojsonPolygon(mongoenv, dbname, collname string, r *http.Request) s
 	return ReturnStruct(geojsonpolygon)
 }
 
-func MembuatUser(mongoenv, dbname, collname string, r *http.Request) string {
+func RegistrasiUser(mongoenv, dbname, collname string, r *http.Request) string {
 	var response Credential
 	response.Status = false
 	mconn := SetConnection(mongoenv, dbname)
 	var datauser User
 	err := json.NewDecoder(r.Body).Decode(&datauser)
+	if usernameExists(mongoenv, dbname, datauser) {
+		response.Status = false
+		response.Message = "Username telah dipakai"
+	}
 	if err != nil {
 		response.Message = "error parsing application/json: " + err.Error()
 	} else {
@@ -72,7 +76,7 @@ func MembuatUser(mongoenv, dbname, collname string, r *http.Request) string {
 	return ReturnStruct(response)
 }
 
-func MembuatTokenUser(privatekey, mongoenv, dbname, collname string, r *http.Request) string {
+func LoginUser(privatekey, mongoenv, dbname, collname string, r *http.Request) string {
 	var response Credential
 	response.Status = false
 	mconn := SetConnection(mongoenv, dbname)

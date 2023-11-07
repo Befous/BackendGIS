@@ -1,6 +1,7 @@
 package peda
 
 import (
+	"context"
 	"os"
 
 	"github.com/aiteung/atdb"
@@ -128,4 +129,13 @@ func InsertUserdata(mongoenv *mongo.Database, collname, username, role, password
 	req.Password = password
 	req.Role = role
 	return atdb.InsertOneDoc(mongoenv, collname, req)
+}
+
+func usernameExists(mongoenv, dbname string, userdata User) bool {
+	mconn := SetConnection(mongoenv, dbname).Collection("user")
+	filter := bson.M{"username": userdata.Username}
+
+	var user User
+	err := mconn.FindOne(context.Background(), filter).Decode(&user)
+	return err == nil
 }

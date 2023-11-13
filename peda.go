@@ -31,21 +31,21 @@ func AmbilDataGeojson(mongoenv, dbname, collname string, r *http.Request) string
 }
 
 func MembuatGeojsonPoint(mongoenv, dbname, collname string, r *http.Request) string {
-	var response Pesan
+	var atmessage PostToken
 	if r.Header.Get("token") == os.Getenv("TOKEN") {
 		mconn := SetConnection(mongoenv, dbname)
 		var geojsonpoint GeoJsonPoint
 		err := json.NewDecoder(r.Body).Decode(&geojsonpoint)
 		if err != nil {
-			response.Message = "error parsing application/json: " + err.Error()
+			atmessage.Response = "error parsing application/json: " + err.Error()
 		} else {
 			PostPoint(mconn, collname, geojsonpoint)
-			response.Message = "Data point berhasil masuk"
+			atmessage, _ = PostStructWithToken[PostToken]("Token", os.Getenv("TOKEN"), geojsonpoint, "https://asia-southeast2-befous.cloudfunctions.net/Befous-MembuatGeojsonPoint-Token")
 		}
 	} else {
-		response.Message = "Token Salah"
+		atmessage.Response = "Token Salah"
 	}
-	return ReturnStruct(response)
+	return ReturnStruct(atmessage)
 }
 
 func MembuatGeojsonPolyline(mongoenv, dbname, collname string, r *http.Request) string {

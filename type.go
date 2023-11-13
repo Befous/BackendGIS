@@ -82,3 +82,12 @@ type Coordinate struct {
 	Name        string    `json:"name" bson:"name"`
 	Coordinates []float64 `json:"coordinates" bson:"coordinates"`
 }
+
+type Token struct {
+	Key    string
+	Values string
+}
+
+type PostToken struct {
+	Response string `json:"response"`
+}

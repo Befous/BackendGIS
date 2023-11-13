@@ -40,7 +40,7 @@ func MembuatGeojsonPoint(mongoenv, dbname, collname string, r *http.Request) str
 			atmessage.Response = "error parsing application/json: " + err.Error()
 		} else {
 			PostPoint(mconn, collname, geojsonpoint)
-			atmessage, _ = PostStructWithToken[PostToken]("Token", os.Getenv("TOKEN"), geojsonpoint, "https://asia-southeast2-befous.cloudfunctions.net/Befous-MembuatGeojsonPoint-Token")
+			atmessage, _ = PostStructWithToken[PostToken]("token", os.Getenv("TOKEN"), geojsonpoint, "https://asia-southeast2-befous.cloudfunctions.net/Befous-MembuatGeojsonPoint-Token")
 		}
 	} else {
 		atmessage.Response = "Token Salah"

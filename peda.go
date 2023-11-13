@@ -13,43 +13,75 @@ func ReturnStruct(DataStuct any) string {
 	return string(jsondata)
 }
 
-func AmbilDataGeojson(mongoenv, dbname, collname string) string {
-	mconn := SetConnection(mongoenv, dbname)
-	datagedung := GetAllBangunanLineString(mconn, collname)
-	return ReturnStruct(datagedung)
+func AmbilDataGeojson(mongoenv, dbname, collname string, r *http.Request) string {
+	var response Pesan
+	if r.Header.Get("token") == os.Getenv("TOKEN") {
+		mconn := SetConnection(mongoenv, dbname)
+		datagedung := GetAllBangunanLineString(mconn, collname)
+		err := json.NewDecoder(r.Body).Decode(&datagedung)
+		if err != nil {
+			response.Message = "error parsing application/json: " + err.Error()
+		} else {
+			response.Message = "Data berhasil diambil"
+		}
+	} else {
+		response.Message = "Token Salah"
+	}
+	return ReturnStruct(response)
 }
 
 func MembuatGeojsonPoint(mongoenv, dbname, collname string, r *http.Request) string {
-	mconn := SetConnection(mongoenv, dbname)
-	var geojsonpoint GeoJsonPoint
-	err := json.NewDecoder(r.Body).Decode(&geojsonpoint)
-	if err != nil {
-		return err.Error()
+	var response Pesan
+	if r.Header.Get("token") == os.Getenv("TOKEN") {
+		mconn := SetConnection(mongoenv, dbname)
+		var geojsonpoint GeoJsonPoint
+		err := json.NewDecoder(r.Body).Decode(&geojsonpoint)
+		if err != nil {
+			response.Message = "error parsing application/json: " + err.Error()
+		} else {
+			PostPoint(mconn, collname, geojsonpoint)
+			response.Message = "Data point berhasil masuk"
+		}
+	} else {
+		response.Message = "Token Salah"
 	}
-	PostPoint(mconn, collname, geojsonpoint)
-	return ReturnStruct(geojsonpoint)
+	return ReturnStruct(response)
 }
 
 func MembuatGeojsonPolyline(mongoenv, dbname, collname string, r *http.Request) string {
-	mconn := SetConnection(mongoenv, dbname)
-	var geojsonline GeoJsonLineString
-	err := json.NewDecoder(r.Body).Decode(&geojsonline)
-	if err != nil {
-		return err.Error()
+	var response Pesan
+	if r.Header.Get("token") == os.Getenv("TOKEN") {
+		mconn := SetConnection(mongoenv, dbname)
+		var geojsonline GeoJsonLineString
+		err := json.NewDecoder(r.Body).Decode(&geojsonline)
+		if err != nil {
+			response.Message = "error parsing application/json: " + err.Error()
+		} else {
+			PostLinestring(mconn, collname, geojsonline)
+			response.Message = "Data polyline berhasil masuk"
+		}
+	} else {
+		response.Message = "Token Salah"
 	}
-	PostLinestring(mconn, collname, geojsonline)
-	return ReturnStruct(geojsonline)
+	return ReturnStruct(response)
 }
 
 func MembuatGeojsonPolygon(mongoenv, dbname, collname string, r *http.Request) string {
-	mconn := SetConnection(mongoenv, dbname)
-	var geojsonpolygon GeoJsonPolygon
-	err := json.NewDecoder(r.Body).Decode(&geojsonpolygon)
-	if err != nil {
-		return err.Error()
+	var response Pesan
+	if r.Header.Get("token") == os.Getenv("TOKEN") {
+		mconn := SetConnection(mongoenv, dbname)
+		var geojsonpolygon GeoJsonPolygon
+		err := json.NewDecoder(r.Body).Decode(&geojsonpolygon)
+		if err != nil {
+			response.Message = "error parsing application/json: " + err.Error()
+		} else {
+			PostPolygon(mconn, collname, geojsonpolygon)
+			response.Message = "Data polygon berhasil masuk"
+		}
+	} else {
+		response.Message = "Token Salah"
 	}
-	PostPolygon(mconn, collname, geojsonpolygon)
-	return ReturnStruct(geojsonpolygon)
+	return ReturnStruct(response)
 }
 
 func RegistrasiUser(mongoenv, dbname, collname string, r *http.Request) string {

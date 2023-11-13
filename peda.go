@@ -2,6 +2,7 @@ package peda
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -30,7 +31,7 @@ func AmbilDataGeojson(mongoenv, dbname, collname string, r *http.Request) string
 	return ReturnStruct(response)
 }
 
-func MembuatGeojsonPointToken(string, r *http.Request) string {
+func MembuatGeojsonPointToken(w http.ResponseWriter, r *http.Request) {
 	var atmessage PostToken
 	if r.Header.Get("token") == os.Getenv("TOKEN") {
 		var geojsonpoint GeoJsonPoint
@@ -43,7 +44,7 @@ func MembuatGeojsonPointToken(string, r *http.Request) string {
 	} else {
 		atmessage.Response = "Token Salah"
 	}
-	return ReturnStruct(atmessage)
+	fmt.Fprintf(w, atmessage.Response)
 }
 
 func MembuatGeojsonPoint(mongoenv, dbname, collname string, r *http.Request) string {

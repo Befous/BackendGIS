@@ -13,96 +13,6 @@ func ReturnStruct(DataStuct any) string {
 	return string(jsondata)
 }
 
-func AmbilDataGeojsonToken(mongoenv, dbname, collname string, r *http.Request) string {
-	var atmessage PostToken
-	if r.Header.Get("token") == os.Getenv("TOKEN") {
-		mconn := SetConnection(mongoenv, dbname)
-		datagedung := GetAllBangunanLineString(mconn, collname)
-		var geojsonpoint GeoJsonPoint
-		err := json.NewDecoder(r.Body).Decode(&geojsonpoint)
-		if err != nil {
-			atmessage.Response = "error parsing application/json: " + err.Error()
-		} else {
-			PostPoint(mconn, collname, geojsonpoint)
-			atmessage, _ = PostStructWithToken[PostToken]("token", os.Getenv("TOKEN"), datagedung, "https://asia-southeast2-befous.cloudfunctions.net/Befous-AmbilDataGeojson")
-		}
-	} else {
-		atmessage.Response = "Token Salah"
-	}
-	return ReturnStruct(atmessage)
-}
-
-func AmbilDataGeojson(mongoenv, dbname, collname string, r *http.Request) string {
-	var response Pesan
-	if r.Header.Get("token") == os.Getenv("TOKEN") {
-		mconn := SetConnection(mongoenv, dbname)
-		datagedung := GetAllBangunanLineString(mconn, collname)
-		err := json.NewDecoder(r.Body).Decode(&datagedung)
-		if err != nil {
-			response.Message = "error parsing application/json: " + err.Error()
-		} else {
-			response.Message = "Data berhasil diambil"
-		}
-	} else {
-		response.Message = "Token Salah"
-	}
-	return ReturnStruct(response)
-}
-
-func MembuatGeojsonPointToken(mongoenv, dbname, collname string, r *http.Request) string {
-	var atmessage PostToken
-	if r.Header.Get("token") == os.Getenv("TOKEN") {
-		mconn := SetConnection(mongoenv, dbname)
-		var geojsonpoint GeoJsonPoint
-		err := json.NewDecoder(r.Body).Decode(&geojsonpoint)
-		if err != nil {
-			atmessage.Response = "error parsing application/json: " + err.Error()
-		} else {
-			PostPoint(mconn, collname, geojsonpoint)
-			atmessage, _ = PostStructWithToken[PostToken]("token", os.Getenv("TOKEN"), geojsonpoint, "https://asia-southeast2-befous.cloudfunctions.net/Befous-MembuatGeojsonPoint")
-		}
-	} else {
-		atmessage.Response = "Token Salah"
-	}
-	return ReturnStruct(atmessage)
-}
-
-func MembuatGeojsonPolylineToken(mongoenv, dbname, collname string, r *http.Request) string {
-	var atmessage PostToken
-	if r.Header.Get("token") == os.Getenv("TOKEN") {
-		mconn := SetConnection(mongoenv, dbname)
-		var geojsonline GeoJsonLineString
-		err := json.NewDecoder(r.Body).Decode(&geojsonline)
-		if err != nil {
-			atmessage.Response = "error parsing application/json: " + err.Error()
-		} else {
-			PostLinestring(mconn, collname, geojsonline)
-			atmessage, _ = PostStructWithToken[PostToken]("token", os.Getenv("TOKEN"), geojsonline, "https://asia-southeast2-befous.cloudfunctions.net/Befous-MembuatGeojsonPolyline")
-		}
-	} else {
-		atmessage.Response = "Token Salah"
-	}
-	return ReturnStruct(atmessage)
-}
-
-func MembuatGeojsonPolygonToken(mongoenv, dbname, collname string, r *http.Request) string {
-	var atmessage PostToken
-	if r.Header.Get("token") == os.Getenv("TOKEN") {
-		mconn := SetConnection(mongoenv, dbname)
-		var geojsonpolygon GeoJsonPolygon
-		err := json.NewDecoder(r.Body).Decode(&geojsonpolygon)
-		if err != nil {
-			atmessage.Response = "error parsing application/json: " + err.Error()
-		} else {
-			PostPolygon(mconn, collname, geojsonpolygon)
-			atmessage, _ = PostStructWithToken[PostToken]("token", os.Getenv("TOKEN"), geojsonpolygon, "https://asia-southeast2-befous.cloudfunctions.net/Befous-MembuatGeojsonPolygon")
-		}
-	} else {
-		atmessage.Response = "Token Salah"
-	}
-	return ReturnStruct(atmessage)
-}
-
 func MembuatGeojsonPoint(mongoenv, dbname, collname string, r *http.Request) string {
 	mconn := SetConnection(mongoenv, dbname)
 	var geojsonpoint GeoJsonPoint
@@ -150,23 +60,21 @@ func MembuatGeojsonPolygon(mongoenv, dbname, collname string, r *http.Request) s
 	return ReturnStruct(response)
 }
 
-func RegistrasiUserToken(mongoenv, dbname, collname string, r *http.Request) string {
-	var atmessage PostToken
+func AmbilDataGeojson(mongoenv, dbname, collname string, r *http.Request) string {
+	var response Pesan
 	if r.Header.Get("token") == os.Getenv("TOKEN") {
 		mconn := SetConnection(mongoenv, dbname)
-		var geojsonpoint GeoJsonPoint
-		var datauser GeoJsonPoint
-		err := json.NewDecoder(r.Body).Decode(&datauser)
+		datagedung := GetAllBangunanLineString(mconn, collname)
+		err := json.NewDecoder(r.Body).Decode(&datagedung)
 		if err != nil {
-			atmessage.Response = "error parsing application/json: " + err.Error()
+			response.Message = "error parsing application/json: " + err.Error()
 		} else {
-			PostPoint(mconn, collname, geojsonpoint)
-			atmessage, _ = PostStructWithToken[PostToken]("token", os.Getenv("TOKEN"), datauser, "https://asia-southeast2-befous.cloudfunctions.net/Befous-RegistrasiUser")
+			response.Message = "Data berhasil diambil"
 		}
 	} else {
-		atmessage.Response = "Token Salah"
+		response.Message = "Token Salah"
 	}
-	return ReturnStruct(atmessage)
+	return ReturnStruct(response)
 }
 
 func RegistrasiUser(mongoenv, dbname, collname string, r *http.Request) string {
@@ -195,25 +103,6 @@ func RegistrasiUser(mongoenv, dbname, collname string, r *http.Request) string {
 	return ReturnStruct(response)
 }
 
-func LoginUserToken(mongoenv, dbname, collname string, r *http.Request) string {
-	var atmessage PostToken
-	if r.Header.Get("token") == os.Getenv("TOKEN") {
-		mconn := SetConnection(mongoenv, dbname)
-		var geojsonpoint GeoJsonPoint
-		var datauser User
-		err := json.NewDecoder(r.Body).Decode(&geojsonpoint)
-		if err != nil {
-			atmessage.Response = "error parsing application/json: " + err.Error()
-		} else {
-			PostPoint(mconn, collname, geojsonpoint)
-			atmessage, _ = PostStructWithToken[PostToken]("token", os.Getenv("TOKEN"), datauser, "https://asia-southeast2-befous.cloudfunctions.net/Befous-LoginUser")
-		}
-	} else {
-		atmessage.Response = "Token Salah"
-	}
-	return ReturnStruct(atmessage)
-}
-
 func LoginUser(privatekey, mongoenv, dbname, collname string, r *http.Request) string {
 	var response Credential
 	response.Status = false
@@ -239,25 +128,6 @@ func LoginUser(privatekey, mongoenv, dbname, collname string, r *http.Request) s
 	return ReturnStruct(response)
 }
 
-func HapusToken(mongoenv, dbname, collname string, r *http.Request) string {
-	var atmessage PostToken
-	if r.Header.Get("token") == os.Getenv("TOKEN") {
-		mconn := SetConnection(mongoenv, dbname)
-		var geojsonpoint GeoJsonPoint
-		var datauser User
-		err := json.NewDecoder(r.Body).Decode(&geojsonpoint)
-		if err != nil {
-			atmessage.Response = "error parsing application/json: " + err.Error()
-		} else {
-			PostPoint(mconn, collname, geojsonpoint)
-			atmessage, _ = PostStructWithToken[PostToken]("token", os.Getenv("TOKEN"), datauser, "https://asia-southeast2-befous.cloudfunctions.net/Befous-HapusUser")
-		}
-	} else {
-		atmessage.Response = "Token Salah"
-	}
-	return ReturnStruct(atmessage)
-}
-
 func HapusUser(mongoenv, dbname, collname string, r *http.Request) string {
 	var response Credential
 	response.Status = false
@@ -273,11 +143,9 @@ func HapusUser(mongoenv, dbname, collname string, r *http.Request) string {
 	return ReturnStruct(response)
 }
 
-func MembuatGeojsonPointTokenRaul(mongoenv, dbname, collname string, r *http.Request) string {
-	// MongoDB Connection Setup
+func MembuatGeojsonPointHeader(mongoenv, dbname, collname string, r *http.Request) string {
 	mconn := SetConnection(mongoenv, dbname)
 
-	// Parsing Request Body
 	var datapoint GeoJsonPoint
 	err := json.NewDecoder(r.Body).Decode(&datapoint)
 	if err != nil {
@@ -285,10 +153,8 @@ func MembuatGeojsonPointTokenRaul(mongoenv, dbname, collname string, r *http.Req
 	}
 
 	if r.Header.Get("token") == os.Getenv("token") {
-		// Handling Authorization
 		err := PostPoint(mconn, collname, datapoint)
 		if err != nil {
-			// Success
 			return ReturnStruct(CreateResponse(true, "Success: LineString created", datapoint))
 		} else {
 			return ReturnStruct(CreateResponse(false, "Error", nil))
@@ -296,7 +162,62 @@ func MembuatGeojsonPointTokenRaul(mongoenv, dbname, collname string, r *http.Req
 	} else {
 		return ReturnStruct(CreateResponse(false, "Unauthorized: Secret header does not match", nil))
 	}
+}
 
-	// This part is unreachable, so you might want to remove it
-	// return GCFReturnStruct(CreateResponse(false, "Success to create LineString", nil))
+func MembuatGeojsonPolylineHeader(mongoenv, dbname, collname string, r *http.Request) string {
+	mconn := SetConnection(mongoenv, dbname)
+
+	var datapolyline GeoJsonLineString
+	err := json.NewDecoder(r.Body).Decode(&datapolyline)
+	if err != nil {
+		return err.Error()
+	}
+
+	if r.Header.Get("token") == os.Getenv("token") {
+		err := PostLinestring(mconn, collname, datapolyline)
+		if err != nil {
+			return ReturnStruct(CreateResponse(true, "Success: LineString created", datapolyline))
+		} else {
+			return ReturnStruct(CreateResponse(false, "Error", nil))
+		}
+	} else {
+		return ReturnStruct(CreateResponse(false, "Unauthorized: Secret header does not match", nil))
+	}
+}
+
+func MembuatGeojsonPolygonHeader(mongoenv, dbname, collname string, r *http.Request) string {
+	mconn := SetConnection(mongoenv, dbname)
+
+	var datapolygon GeoJsonPolygon
+	err := json.NewDecoder(r.Body).Decode(&datapolygon)
+	if err != nil {
+		return err.Error()
+	}
+
+	if r.Header.Get("token") == os.Getenv("token") {
+		err := PostPolygon(mconn, collname, datapolygon)
+		if err != nil {
+			return ReturnStruct(CreateResponse(true, "Success: LineString created", datapolygon))
+		} else {
+			return ReturnStruct(CreateResponse(false, "Error", nil))
+		}
+	} else {
+		return ReturnStruct(CreateResponse(false, "Unauthorized: Secret header does not match", nil))
+	}
+}
+
+func AmbilDataGeojsonHeader(mongoenv, dbname, collname string, r *http.Request) string {
+	mconn := SetConnection(mongoenv, dbname)
+
+	if r.Header.Get("token") == os.Getenv("token") {
+		datagedung := GetAllBangunanLineString(mconn, collname)
+		err := json.NewDecoder(r.Body).Decode(&datagedung)
+		if err != nil {
+			return ReturnStruct(CreateResponse(true, "Success: LineString created", datagedung))
+		} else {
+			return ReturnStruct(CreateResponse(false, "Error", nil))
+		}
+	} else {
+		return ReturnStruct(CreateResponse(false, "Unauthorized: Secret header does not match", nil))
+	}
 }

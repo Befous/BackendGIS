@@ -170,3 +170,12 @@ func PostStructWithToken[T any](tokenkey string, tokenvalue string, structname i
 	}
 	return
 }
+
+func CreateResponse(status bool, message string, data interface{}) Jaja {
+	response := Jaja{
+		Status:  status,
+		Message: message,
+		Data:    data,
+	}
+	return response
+}

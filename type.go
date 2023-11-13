@@ -91,3 +91,9 @@ type Token struct {
 type PostToken struct {
 	Response string `json:"response"`
 }
+
+type Jaja struct {
+	Status  bool        `json:"status" bson:"status"`
+	Message string      `json:"message" bson:"message"`
+	Data    interface{} `json:"data" bson:"data"`
+}

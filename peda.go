@@ -272,3 +272,31 @@ func HapusUser(mongoenv, dbname, collname string, r *http.Request) string {
 	}
 	return ReturnStruct(response)
 }
+
+func MembuatGeojsonPointTokenRaul(mongoenv, dbname, collname string, r *http.Request) string {
+	// MongoDB Connection Setup
+	mconn := SetConnection(mongoenv, dbname)
+
+	// Parsing Request Body
+	var datapoint GeoJsonPoint
+	err := json.NewDecoder(r.Body).Decode(&datapoint)
+	if err != nil {
+		return err.Error()
+	}
+
+	if r.Header.Get("token") == os.Getenv("token") {
+		// Handling Authorization
+		err := PostPoint(mconn, collname, datapoint)
+		if err != nil {
+			// Success
+			return ReturnStruct(CreateResponse(true, "Success: LineString created", datapoint))
+		} else {
+			return ReturnStruct(CreateResponse(false, "Error", nil))
+		}
+	} else {
+		return ReturnStruct(CreateResponse(false, "Unauthorized: Secret header does not match", nil))
+	}
+
+	// This part is unreachable, so you might want to remove it
+	// return GCFReturnStruct(CreateResponse(false, "Success to create LineString", nil))
+}

@@ -155,7 +155,7 @@ func MembuatGeojsonPointHeader(mongoenv, dbname, collname string, r *http.Reques
 	if r.Header.Get("token") == os.Getenv("token") {
 		err := PostPoint(mconn, collname, datapoint)
 		if err != nil {
-			return ReturnStruct(CreateResponse(true, "Success: LineString created", datapoint))
+			return ReturnStruct(CreateResponse(true, "Success: Point created", datapoint))
 		} else {
 			return ReturnStruct(CreateResponse(false, "Error", nil))
 		}
@@ -197,7 +197,7 @@ func MembuatGeojsonPolygonHeader(mongoenv, dbname, collname string, r *http.Requ
 	if r.Header.Get("token") == os.Getenv("token") {
 		err := PostPolygon(mconn, collname, datapolygon)
 		if err != nil {
-			return ReturnStruct(CreateResponse(true, "Success: LineString created", datapolygon))
+			return ReturnStruct(CreateResponse(true, "Success: Polygon created", datapolygon))
 		} else {
 			return ReturnStruct(CreateResponse(false, "Error", nil))
 		}
@@ -213,7 +213,7 @@ func AmbilDataGeojsonHeader(mongoenv, dbname, collname string, r *http.Request) 
 		datagedung := GetAllBangunanLineString(mconn, collname)
 		err := json.NewDecoder(r.Body).Decode(&datagedung)
 		if err != nil {
-			return ReturnStruct(CreateResponse(true, "Success: LineString created", datagedung))
+			return ReturnStruct(CreateResponse(true, "Success: GeoJson shown", datagedung))
 		} else {
 			return ReturnStruct(CreateResponse(false, "Error", nil))
 		}

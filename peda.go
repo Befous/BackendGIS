@@ -60,21 +60,10 @@ func MembuatGeojsonPolygon(mongoenv, dbname, collname string, r *http.Request) s
 	return ReturnStruct(response)
 }
 
-func AmbilDataGeojson(mongoenv, dbname, collname string, r *http.Request) string {
-	var response Pesan
-	if r.Header.Get("token") == os.Getenv("TOKEN") {
-		mconn := SetConnection(mongoenv, dbname)
-		datagedung := GetAllBangunanLineString(mconn, collname)
-		err := json.NewDecoder(r.Body).Decode(&datagedung)
-		if err != nil {
-			response.Message = "error parsing application/json: " + err.Error()
-		} else {
-			response.Message = "Data berhasil diambil"
-		}
-	} else {
-		response.Message = "Token Salah"
-	}
-	return ReturnStruct(response)
+func AmbilDataGeojson(mongoenv, dbname, collname string) string {
+	mconn := SetConnection(mongoenv, dbname)
+	datagedung := GetAllBangunanLineString(mconn, collname)
+	return ReturnStruct(datagedung)
 }
 
 func RegistrasiUser(mongoenv, dbname, collname string, r *http.Request) string {
